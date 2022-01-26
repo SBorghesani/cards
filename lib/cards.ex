@@ -47,4 +47,39 @@ defmodule Cards do
   def contains?(deck, card) do
     Enum.member?(deck, card)
   end
+
+  def deal(deck, hand_size) do
+    Enum.split(deck, hand_size)
+  end
+
+  def save(deck, filename) do
+    #How we invoke erlang code: <:erlang>
+    binary = :erlang.term_to_binary(deck)
+    File.write(filename, binary)
+  end
+
+
+
+###This works, but it could be cleaner###
+  # def load(filename) do
+  #   {status, binary} = File.read(filename)
+
+  #   case status do
+  #     :ok -> :erlang.binary_to_term(binary)
+  #     :error -> "That file does not exist"
+  #   end
+  # end
+
+
+###Cleaner code: ###
+  def load(filename) do
+    case File.read(filename) do
+      {:ok, binary} -> :erlang.binary_to_term(binary)
+      {:error, _reason} -> "That file does not exist"
+    end
+  end
+
+
+
+
 end
